@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autopartes Eléctricas SC | Catálogo Interactivo</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #020617 0%, #1e293b 100%);
+            border-bottom: 3px solid var(--accent);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .instruction {
+            text-align: center;
+            background-color: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .img-box {
+            background-color: #ffffff;
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .img-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--bg-dark);
+            color: var(--accent);
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-category {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-info {
+            background-color: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.5rem;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .card:hover .btn-info {
+            background-color: var(--accent);
+            color: #000;
+        }
+
+        /* Modal Interactivo */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 14px;
+            max-width: 550px;
+            width: 100%;
+            overflow: hidden;
+            animation: zoomIn 0.2s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-img {
+            background-color: #fff;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .modal-details {
+            padding: 1.5rem;
+        }
+
+        .modal-details h2 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-details p {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .specs-list {
+            background-color: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+        }
+
+        .specs-list li {
+            list-style: none;
+            margin-bottom: 0.4rem;
+            color: var(--text-muted);
+        }
+
+        .specs-list strong {
+            color: var(--text-main);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-whatsapp {
+            flex: 1;
+            background-color: #22c55e;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .btn-close {
+            background-color: var(--border);
+            color: var(--text-main);
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: #020617;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer strong {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Autopartes Eléctricas SC</h1>
+        <p>Especialistas en sistemas de arranque, alternadores y componentes eléctricos automotrices</p>
+    </header>
+
+    <main class="container">
+        <div class="instruction">
+            👆 Toca cualquier pieza para ver su nombre técnico, función y especificaciones
+        </div>
+
+        <div class="grid" id="catalogGrid"></div>
+    </main>
+
+    <!-- Ventana Modal con Información de la Pieza -->
+    <div class="modal" id="productModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-img">
+                <img id="modalImg" src="" alt="Detalle de autoparte">
+            </div>
+            <div class="modal-details">
+                <span class="card-category" id="modalCategory"></span>
+                <h2 id="modalTitle"></h2>
+                <p id="modalDesc"></p>
+                <ul class="specs-list">
+                    <li><strong>Sistema:</strong> <span id="modalSystem"></span></li>
+                    <li><strong>Función principal:</strong> <span id="modalFunction"></span></li>
+                </ul>
+                <div class="modal-actions">
+                    <a id="whatsappLink" href="#" target="_blank" class="btn-whatsapp">Cotizar por WhatsApp</a>
+                    <button class="btn-close" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>Autopartes Eléctricas SC</strong></p>
+        <p>Dirección: Calzada Olímpica #1156, Guadalajara, Jalisco</p>
+        <p>Teléfono / WhatsApp: <strong>33 1386 6168</strong></p>
+    </footer>
+
+    <script>
+        const productos = [
+            {
+                imagen: "1000168710.jpg",
+                nombre: "Portaescobillas de Alternador (Serie 36419)",
+                categoria: "Sistema de Carga",
+                sistema: "Alternador automotriz",
+                funcion: "Mantiene el contacto eléctrico constante entre los carbones y los anillos rozantes del rotor para generar corriente.",
+                descripcion: "Portaescobillas con carbones de cobre-grafito de alta durabilidad y trenza de cobre reforzada para una conductividad óptima bajo altas temperaturas."
+            },
+            {
+                imagen: "1000168708.jpg",
+                nombre: "Regulador de Voltaje Electrónico",
+                categoria: "Sistema de Carga",
+                sistema: "Alternador",
+                funcion: "Controla y estabiliza el voltaje de salida del alternador para proteger la batería y la electrónica del vehículo.",
+                descripcion: "Módulo regulador encapsulado resistente a vibraciones y calor, diseñado para mantener una carga constante entre 13.8V y 14.4V."
+            },
+            {
+                imagen: "1000168709.jpg",
+                nombre: "Placa Rectificadora / Puente de Diodos",
+                categoria: "Sistema de Carga",
+                sistema: "Alternador",
+                funcion: "Convierte la corriente alterna (CA) generada por el estator en corriente directa (CD) para cargar la batería.",
+                descripcion: "Placa disipadora de aluminio con diodos rectificadores de alta capacidad térmica para evitar sobrecargas y retornos de corriente."
+            },
+            {
+                imagen: "1000168705.jpg",
+                nombre: "Armadura / Rotor de Marcha",
+                categoria: "Sistema de Arranque",
+                sistema: "Motor de arranque (Marcha)",
+                funcion: "Transforma la energía eléctrica de la batería en movimiento mecánico rotatorio para encender el motor.",
+                descripcion: "Inducido bobinado en cobre esmaltado con colector de delgas rectificadas y eje estriado de acero templado."
+            },
+            {
+                imagen: "1000168707.jpg",
+                nombre: "Arnés Conector Automotriz de 4 Vías",
+                categoria: "Conectividad y Cableado",
+                sistema: "Instalación eléctrica / Sensores / Alternador",
+                funcion: "Permite una conexión segura, sellada y libre de falsos contactos en el sistema eléctrico del motor.",
+                descripcion: "Conector hembra tipo automotriz con sello de silicón contra humedad y polvo, equipado con cables automotrices calibre estándar."
+            },
+            {
+                imagen: "1000168706.jpg",
+                nombre: "Alternador Automotriz Completo",
+                categoria: "Sistema de Carga",
+                sistema: "Generación eléctrica",
+                funcion: "Abastece de energía eléctrica a todos los componentes del automóvil y recarga la batería mientras el motor está encendido.",
+                descripcion: "Alternador con carcasa de aluminio ventilada, polea metálica de alta resistencia y rodamientos sellados de larga vida útil."
+            },
+            {
+                imagen: "1000168702.jpg",
+                nombre: "Portaescobillas de Marcha (4 Carbones)",
+                categoria: "Sistema de Arranque",
+                sistema: "Motor de arranque (Marcha)",
+                funcion: "Transfiere la corriente de alta intensidad desde la batería hacia el colector de la armadura.",
+                descripcion: "Base aislante de alta resistencia térmica con 4 escobillas de arranque pesado y cable trenzado de conexión directa."
+            },
+            {
+                imagen: "1000168704.jpg",
+                nombre: "Solenoide / Automático de Marcha",
+                categoria: "Sistema de Arranque",
+                sistema: "Motor de arranque (Marcha)",
+                funcion: "Actúa como interruptor electromagnético de alta corriente y empuja el bendix hacia el volante del motor.",
+                descripcion: "Automático con cuerpo de acero galvanizado, émbolo de accionamiento rápido y terminales de cobre de alta conductividad."
+            },
+            {
+                imagen: "1000168703.jpg",
+                nombre: "Bendix / Impulsor de Marcha",
+                categoria: "Sistema de Arranque",
+                sistema: "Motor de arranque (Marcha)",
+                funcion: "Engrana el piñón con la cremallera del volante motor para transmitir el giro durante el encendido y se desacopla al arrancar.",
+                descripcion: "Impulsor con embrague unidireccional de rodillos y piñón de acero endurecido para evitar desgaste prematuro de los dientes."
+            },
+            {
+                imagen: "1000168695.jpg",
+                nombre: "Motor de Arranque (Marcha Completa)",
+                categoria: "Sistema de Arranque",
+                sistema: "Encendido del motor",
+                funcion: "Proporciona el torque inicial necesario para vencer la compresión del motor de combustión y ponerlo en marcha.",
+                descripcion: "Unidad completa ensamblada con solenoide superior, carcasa reforzada y piñón listo para instalación directa."
+            }
+        ];
+
+        const grid = document.getElementById('catalogGrid');
+
+        productos.forEach((prod, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.onclick = () => openModal(index);
+            card.innerHTML = `
+                <div class="img-box">
+                    <span class="badge">Ver info</span>
+                    <img src="${prod.imagen}" alt="${prod.nombre}">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-category">${prod.categoria}</div>
+                        <div class="card-title">${prod.nombre}</div>
+                    </div>
+                    <div class="btn-info">Tocar para ver detalles</div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        function openModal(index) {
+            const prod = productos[index];
+            document.getElementById('modalImg').src = prod.imagen;
+            document.getElementById('modalCategory').textContent = prod.categoria;
+            document.getElementById('modalTitle').textContent = prod.nombre;
+            document.getElementById('modalDesc').textContent = prod.descripcion;
+            document.getElementById('modalSystem').textContent = prod.sistema;
+            document.getElementById('modalFunction').textContent = prod.funcion;
+            
+            const mensaje = encodeURIComponent(`Hola Autopartes Eléctricas SC, me interesa cotizar: ${prod.nombre}`);
+            document.getElementById('whatsappLink').href = `https://wa.me/523313866168?text=${mensaje}`;
+
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
